@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput as RNTextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Client, Databases } from 'appwrite';
+import DeviceInfo from 'react-native-device-info';
 
-// Reusable Button Component
+const client = new Client();
+client
+  .setEndpoint('https://cloud.appwrite.io/v1')
+  .setProject('67a5ffeb0032bd62ecc9');
+
+const databases = new Databases(client);
+const DATABASE_ID = '67a602c6002a8a86591c';
+const THEME_COLLECTION_ID = '67a6031a00251ca0d9e3';
+const SENTIMENT_COLLECTION_ID = '67a602db002416f508b0';
+
 function CustomButton({ title, onPress, theme }) {
   return (
     <TouchableOpacity
@@ -13,7 +24,6 @@ function CustomButton({ title, onPress, theme }) {
   );
 }
 
-// Reusable TextInput Component
 function CustomTextInput({ placeholder, value, onChangeText, keyboardType, theme }) {
   return (
     <RNTextInput
@@ -35,9 +45,35 @@ function CustomTextInput({ placeholder, value, onChangeText, keyboardType, theme
 }
 
 export default function Index() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [deviceId, setDeviceId] = useState('');
+  
+  useEffect(() => {
+    async function fetchDeviceId() {
+      try {
+        const id = await DeviceInfo.getUniqueId();
+        // Sanitize the ID by removing disallowed characters.
+        const sanitizedId = (id || '').replace(/[^a-zA-Z0-9-_]/g, '');
+        setDeviceId(sanitizedId);
+      } catch (err) {
+        console.error('Error fetching device ID:', err);
+      }
+    }
+    fetchDeviceId();
+  }, []);
 
-  // Light mode settings
+  // ... rest of your component code, using "deviceId" when needed
+
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const [weather, setWeather] = useState(null);
+  const [tokyoTime, setTokyoTime] = useState('');
+  const [showTokyo, setShowTokyo] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [sentiment, setSentiment] = useState(null);
+  const [error, setError] = useState('');
+  const [text, setText] = useState('');
+
   const lightTheme = {
     backgroundColor: '#ffffff',
     textColor: '#000000',
@@ -46,7 +82,6 @@ export default function Index() {
     placeholderColor: '#7f7f7f',
   };
 
-  // Dark mode settings
   const darkTheme = {
     backgroundColor: '#000000',
     textColor: '#ffffff',
@@ -55,25 +90,24 @@ export default function Index() {
     placeholderColor: '#aaaaaa',
   };
 
-  // Select theme
   const currentTheme = isDarkMode ? darkTheme : lightTheme;
 
-  const [name, setName] = useState(''); // State for Name
-  const [number, setNumber] = useState(''); // State for Age
-
-  const [weather, setWeather] = useState(null); // State for Tokyo weather
-  const [tokyoTime, setTokyoTime] = useState(''); // State for Tokyo time
-  const [showTokyo, SetShowTokyo] = useState(false); // State for Tokyo time
-
-  // States for sentiment analysis
-  const [loading, setLoading] = useState(false);
-  const [sentiment, setSentiment] = useState(null);
-  const [error, setError] = useState('');
-  const [text, setText] = useState(''); 
-
-  // Fetch weather data
   useEffect(() => {
-    const fetchWeather = async () => {
+    async function fetchThemePreference() {
+      try {
+        const doc = await databases.getDocument(DATABASE_ID, THEME_COLLECTION_ID, deviceId);
+        setIsDarkMode(doc.isDarkMode);
+      } catch (err) {
+        console.log('No stored theme preference found.');
+      }
+    }
+    if (deviceId) {
+      fetchThemePreference();
+    }
+  }, [deviceId]);
+
+  useEffect(() => {
+    async function fetchWeather() {
       try {
         const response = await fetch(
           'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&current_weather=true'
@@ -83,12 +117,10 @@ export default function Index() {
       } catch (error) {
         console.error('Error fetching weather data:', error);
       }
-    };
-
+    }
     fetchWeather();
   }, []);
 
-  // Update Tokyo time every second
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
@@ -101,59 +133,104 @@ export default function Index() {
       const formatter = new Intl.DateTimeFormat('en-US', options);
       setTokyoTime(formatter.format(now));
     }, 1000);
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
-    // Function to fetch sentiment analysis
-    const analyzeSentiment = async () => {
-      if (!text) {
-        setError('Please enter text before analyzing.');
-        return;
+  const storeThemePreference = async (themePreference) => {
+    try {
+      await databases.createDocument(
+        DATABASE_ID,
+        THEME_COLLECTION_ID,
+        deviceId,
+        { isDarkMode: themePreference }
+      );
+    } catch (err) {
+      if (err.code === 409) {
+        try {
+          await databases.updateDocument(
+            DATABASE_ID,
+            THEME_COLLECTION_ID,
+            deviceId,
+            { isDarkMode: themePreference }
+          );
+        } catch (updateErr) {
+          console.error('Error updating theme preference:', updateErr);
+        }
+      } else {
+        console.error('Error saving theme preference:', err);
       }
-    
-      setLoading(true);
-      setError('');
-      setSentiment(null);
-    
-      try {
-        const response = await fetch('https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english', {
+    }
+  };
+
+  const storeSentimentHistory = async (sentimentResult) => {
+    try {
+      await databases.createDocument(
+        DATABASE_ID,
+        SENTIMENT_COLLECTION_ID,
+        'unique()',
+        {
+          deviceId: deviceId,
+          text: text,
+          sentiment: sentimentResult,
+          createdAt: new Date().toISOString(),
+        }
+      );
+    } catch (err) {
+      console.error('Error saving sentiment history:', err);
+    }
+  };
+
+  const toggleTheme = async () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    await storeThemePreference(newTheme);
+  };
+
+  const analyzeSentiment = async () => {
+    if (!text) {
+      setError('Please enter text before analyzing.');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    setSentiment(null);
+    try {
+      const response = await fetch(
+        'https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english',
+        {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer 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',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ inputs: text }),
-        });
-    
-        if (!response.ok) throw new Error('Failed to analyze sentiment.');
-    
-        const data = await response.json();
-        setSentiment(data[0][0].label);
-      } catch (err) {
-        setError('Error fetching sentiment data.');
-      } finally {
-        setLoading(false);
-      }
-    };
+        }
+      );
+      if (!response.ok) throw new Error('Failed to analyze sentiment.');
+      const data = await response.json();
+      const sentimentResult = data[0][0].label;
+      setSentiment(sentimentResult);
+      await storeSentimentHistory(sentimentResult);
+    } catch (err) {
+      setError('Error fetching sentiment data.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: currentTheme.backgroundColor }]}>
       <Text style={[styles.text, { color: currentTheme.textColor }]}>
-        Welcome to the MEET project!
+        Appwrite integration example.
       </Text>
       <Text style={[styles.text, { color: currentTheme.textColor }]}>
-        This is going to be where I test out new code and do MEET tasks before we actually start coding.
+        Welcome to the MEET project.
       </Text>
-  
-      {/* Reusable Button */}
       <CustomButton
         title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        onPress={() => setIsDarkMode(!isDarkMode)}
+        onPress={toggleTheme}
         theme={currentTheme}
       />
-  
-      {/* Reusable TextInput Components */}
       <CustomTextInput
         placeholder="Enter your name"
         value={name}
@@ -168,21 +245,16 @@ export default function Index() {
         keyboardType="numeric"
         theme={currentTheme}
       />
-  
       {name !== '' && number !== '' && (
         <Text style={[styles.text, { color: currentTheme.textColor }]}>
           WOWWWW {name.toUpperCase()} YOU ARE GETTING PRETTY OLD! YOU'RE {number.toUpperCase()}
         </Text>
       )}
-  
-      {/* Button to Toggle Tokyo Information */}
       <CustomButton
         title={showTokyo ? "Hide Tokyo's Information" : "Show Tokyo's Information"}
-        onPress={() => SetShowTokyo(!showTokyo)}
+        onPress={() => setShowTokyo(!showTokyo)}
         theme={currentTheme}
       />
-  
-      {/* Conditionally Render Tokyo Information */}
       {showTokyo && (
         <>
           {weather && (
@@ -195,36 +267,25 @@ export default function Index() {
           </Text>
         </>
       )}
-
-        {/* User Input */}
-        <CustomTextInput
+      <CustomTextInput
         placeholder="Enter text for sentiment analysis"
         value={text}
         onChangeText={setText}
         keyboardType="default"
         theme={currentTheme}
       />
-
-      {/* Analyze Button */}
       <CustomButton
         title="Analyze Sentiment"
         onPress={analyzeSentiment}
         theme={currentTheme}
       />
-
-      {/* Loading Indicator */}
       {loading && <ActivityIndicator size="large" color={currentTheme.textColor} />}
-
-      {/* Display Sentiment Result */}
       {sentiment && (
         <Text style={[styles.text, { color: sentiment === 'POSITIVE' ? 'green' : 'red' }]}>
           Sentiment: {sentiment}
         </Text>
       )}
-
-      {/* Error Message */}
       {error && <Text style={[styles.text, { color: 'red' }]}>{error}</Text>}
-
     </View>
   );
 }
