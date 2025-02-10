@@ -61,8 +61,6 @@ export default function Index() {
     fetchDeviceId();
   }, []);
 
-  // ... rest of your component code, using "deviceId" when needed
-
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -200,7 +198,7 @@ export default function Index() {
         {
           method: 'POST',
           headers: {
-            'Authorization': 'Bearer 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',
+            'Authorization': 'Bearer API',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ inputs: text }),
