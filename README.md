@@ -10,14 +10,13 @@ A React Native application integrating Appwrite for data management. This projec
 - **Sentiment Analysis**: Analyzes text using an NLP model.
 - **User Input Handling**: Supports text and numeric input.
 
-## 🛠 Installation
+## 🛠 Installation (Mac Only)
 
 ### 1️⃣ Install Prerequisites
 Make sure you have the following installed:
 
 - **Node.js** (version 18+)
 - **Java JDK** (version 11+)
-- **Android SDK** (for running on Android)
 - **Xcode** (for running on iOS, Mac only)
 - **CocoaPods** (for iOS dependencies, Mac only)  
   ```sh
@@ -54,21 +53,12 @@ npx react-native start --reset-cache
 ```sh
 npx react-native run-ios
 ```
-#### For Android (Device or Emulator)
-```sh
-npx react-native run-android
-```
 
 ---
 
 ## 🎯 Future Roadmap & Upcoming Features
 
-- **Dark/Light Mode Toggle**: Saves user preference using Appwrite.
-- **Weather Updates**: Displays real-time weather data for Tokyo.
-- **Real-time Tokyo Time**: Automatically updates every second.
-- **Sentiment Analysis**: Analyzes text using an NLP model.
-- **User Input Handling**: Supports text and numeric input.
-
+- **Android Support**: Set up support for Android users.
 - **Customizable Themes**: Allow users to create and save their own themes.
 - **Multi-City Weather Support**: Expand weather tracking to multiple locations.
 - **Speech-to-Text Integration**: Enable hands-free text input for sentiment analysis.
