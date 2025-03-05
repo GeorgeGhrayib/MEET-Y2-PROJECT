@@ -3,106 +3,69 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput as RNTextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
+  PermissionsAndroid,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { Client, Databases } from 'appwrite';
 import DeviceInfo from 'react-native-device-info';
 import MapView, { UrlTile } from 'react-native-maps';
-import { PermissionsAndroid, Platform, Alert } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import LinearGradient from 'react-native-linear-gradient';
 
 // Create a new Appwrite client instance.
 const client = new Client();
 client
-  .setEndpoint('https://cloud.appwrite.io/v1') // Appwrite endpoint.
-  .setProject('67a5ffeb0032bd62ecc9');         // Your project ID in Appwrite.
+  .setEndpoint('https://cloud.appwrite.io/v1')
+  .setProject('67a5ffeb0032bd62ecc9');
 
-// Access the Databases service from Appwrite.
 const databases = new Databases(client);
-const DATABASE_ID = '67a602c6002a8a86591c';        // database ID.
-const THEME_COLLECTION_ID = '67a6031a00251ca0d9e3'; // Collection for storing theme settings.
-const SENTIMENT_COLLECTION_ID = '67a602db002416f508b0'; // Collection for storing sentiment data.
+const DATABASE_ID = '67a602c6002a8a86591c';
+const THEME_COLLECTION_ID = '67a6031a00251ca0d9e3';
 
-// Custom button component with a dynamic style.
-function CustomButton({ title, onPress, theme }) {
-  return (
-    <TouchableOpacity
-      style={[
-        styles.button,
-        { backgroundColor: theme.inputBackgroundColor, borderColor: theme.textColor },
-      ]}
-      onPress={onPress}
-    >
-      <Text style={[styles.buttonText, { color: theme.textColor }]}>{title}</Text>
-    </TouchableOpacity>
-  );
-}
-
-// Custom text input that accepts a theme prop for styling.
-function CustomTextInput({ placeholder, value, onChangeText, keyboardType, theme }) {
-  return (
-    <RNTextInput
-      style={[
-        styles.input,
-        {
-          backgroundColor: theme.inputBackgroundColor,
-          color: theme.textColor,
-          borderColor: theme.inputBorderColor,
-        },
-      ]}
-      onChangeText={onChangeText}
-      value={value}
-      placeholder={placeholder}
-      placeholderTextColor={theme.placeholderColor}
-      keyboardType={keyboardType}
-    />
-  );
-}
-
-export default function HomePage() {
+export default function HomePage({ onGoToSignIn }) {
   const [deviceId, setDeviceId] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Light and dark theme definitions.
+  // Theme definitions with gradient colors and a vibrant accent color (purple).
   const lightTheme = {
-    backgroundColor: '#ffffff',
+    gradientColors: ['#b3e5fc', '#0288d1'], // Light blue gradient (top to bottom)
     textColor: '#000000',
-    inputBackgroundColor: '#f0f0f0',
-    inputBorderColor: '#d3d3d3',
-    placeholderColor: '#7f7f7f',
+    placeholderColor: '#888888',
+    accentColor: '#613be9', // Vibrant purple for light mode
   };
 
   const darkTheme = {
-    backgroundColor: '#000000',
+    gradientColors: ['#0d47a1', '#01579b'], // Dark blue gradient (top to bottom)
     textColor: '#ffffff',
-    inputBackgroundColor: '#333333',
-    inputBorderColor: '#555555',
     placeholderColor: '#aaaaaa',
+    accentColor: '#613be9', // Vibrant purple for dark mode
   };
 
-  // Pick the current theme based on state.
   const currentTheme = isDarkMode ? darkTheme : lightTheme;
 
-  // Fetch a unique device ID at the start of the component’s lifecycle.
+  // Fetch unique device ID.
   useEffect(() => {
-    async function fetchDeviceId() {
+    (async () => {
       try {
         const id = await DeviceInfo.getUniqueId();
-        // Replace any disallowed characters with an empty string.
-        const sanitizedId = (id || '').replace(/[^a-zA-Z0-9-_]/g, '');
-        setDeviceId(sanitizedId);
+        const sanitized = (id || '').replace(/[^a-zA-Z0-9-_]/g, '');
+        setDeviceId(sanitized);
       } catch (err) {
         console.error('Error fetching device ID:', err);
       }
-    }
-    fetchDeviceId();
+    })();
   }, []);
 
-  // Load a saved theme preference from Appwrite if available.
+  // Load stored theme preference.
   useEffect(() => {
     async function fetchThemePreference() {
+      if (!deviceId) return;
       try {
         const doc = await databases.getDocument(DATABASE_ID, THEME_COLLECTION_ID, deviceId);
         setIsDarkMode(doc.isDarkMode);
@@ -110,29 +73,26 @@ export default function HomePage() {
         console.log('No stored theme preference found.');
       }
     }
-    if (deviceId) {
-      fetchThemePreference();
-    }
+    fetchThemePreference();
   }, [deviceId]);
 
-  // Store or update theme preference in Appwrite.
-  const storeThemePreference = async (themePreference) => {
+  // Store or update theme preference.
+  const storeThemePreference = async (themeValue) => {
     try {
       await databases.createDocument(
         DATABASE_ID,
         THEME_COLLECTION_ID,
         deviceId,
-        { isDarkMode: themePreference }
+        { isDarkMode: themeValue }
       );
     } catch (err) {
-      // If document already exists, update it instead.
       if (err.code === 409) {
         try {
           await databases.updateDocument(
             DATABASE_ID,
             THEME_COLLECTION_ID,
             deviceId,
-            { isDarkMode: themePreference }
+            { isDarkMode: themeValue }
           );
         } catch (updateErr) {
           console.error('Error updating theme preference:', updateErr);
@@ -143,33 +103,26 @@ export default function HomePage() {
     }
   };
 
-  // Switch between light and dark modes, then save preference.
   const toggleTheme = async () => {
-    const newTheme = !isDarkMode;
-    setIsDarkMode(newTheme);
-    await storeThemePreference(newTheme);
+    const nextMode = !isDarkMode;
+    setIsDarkMode(nextMode);
+    await storeThemePreference(nextMode);
   };
-  
-  // Get User Location
-  const [location, setLocation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  
-  // Function to request location permissions
+
+  // Request location permission.
   const requestLocationPermission = async () => {
     if (Platform.OS === 'ios') {
-      // Request iOS permission
       const status = await Geolocation.requestAuthorization('whenInUse');
       return status === 'granted';
     } else {
-      // Request Android permission (not needed in your case)
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     }
   };
-  
-  // Fetch user location
+
+  // Fetch user location.
   useEffect(() => {
     (async () => {
       const hasPermission = await requestLocationPermission();
@@ -178,11 +131,9 @@ export default function HomePage() {
         setLoading(false);
         return;
       }
-  
-      // Get the user's current location
       Geolocation.getCurrentPosition(
-        (position) => {
-          setLocation(position.coords);
+        (pos) => {
+          setLocation(pos.coords);
           setLoading(false);
         },
         (error) => {
@@ -195,181 +146,153 @@ export default function HomePage() {
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: currentTheme.backgroundColor }]}>
-      {/* Header Section */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Text style={[styles.iconText, { color: currentTheme.textColor }]}>Settings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Text style={[styles.iconText, { color: currentTheme.textColor }]}>Language</Text>
-          </TouchableOpacity>
+    <LinearGradient colors={currentTheme.gradientColors} style={styles.linearGradient}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+        {/* Header & Branding */}
+        <View style={styles.headerBranding}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.iconButton}>
+              <Text style={[styles.iconText, { color: currentTheme.textColor }]}>{'⚙️'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton}>
+              <Text style={[styles.iconText, { color: currentTheme.textColor }]}>{'🌐'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.vibrantButton]}>
+              <Text style={styles.vibrantButtonText}>Business Owner? Join</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.brandingSection}>
+            <View style={[styles.logoCircle, { backgroundColor: currentTheme.accentColor }]}>
+              <Text style={{ color: '#ffffff', fontSize: 20 }}>Logo</Text>
+            </View>
+            <Text style={[styles.mainTitle, { color: currentTheme.textColor }]}>Welcome to OpenWay!</Text>
+            <Text style={[styles.missionText, { color: currentTheme.textColor }]}>
+              Our mission is to encourage businesses to be wheelchair-friendly and provide reliable info about accessible locations.
+            </Text>
+            <TouchableOpacity style={[styles.vibrantButton]} onPress={toggleTheme}>
+              <Text style={styles.vibrantButtonText}>Toggle Theme</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <TouchableOpacity style={styles.businessButton}>
-          <Text style={[styles.businessText, { color: currentTheme.textColor }]}>Business Owner? Join</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* Branding & Mission Statement */}
-      <View style={styles.branding}>
-        <View style={[styles.logoPlaceholder, { backgroundColor: currentTheme.inputBackgroundColor }]}>
-          <Text style={[styles.logoText, { color: currentTheme.textColor }]}>Logo</Text>
-        </View>
-        <Text style={[styles.title, { color: currentTheme.textColor }]}>Welcome to OpenWay!</Text>
-        <Text style={[styles.mission, { color: currentTheme.textColor }]}>
-          Our mission is to encourage businesses to be wheelchair-friendly and provide reliable info about accessible locations.
-        </Text>
-        <TouchableOpacity onPress={toggleTheme} style={styles.toggleButton}>
-          <Text style={[styles.toggleButtonText, { color: currentTheme.textColor }]}>Toggle Theme</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Functional Map Section */}
-      <View style={styles.mapContainer}>
-        {loading ? (
-            <ActivityIndicator size="large" color="#007AFF" />
-        ) : (
+        {/* Map Area */}
+        <View style={styles.mapContainer}>
+          {loading ? (
+            <ActivityIndicator size="large" color={currentTheme.textColor} />
+          ) : (
             <MapView
-            style={[styles.map, { borderColor: currentTheme.inputBackgroundColor }]}
-            initialRegion={{
-                latitude: location.latitude,
-                longitude: location.longitude,
+              style={[styles.map, { borderColor: currentTheme.textColor }]}
+              initialRegion={{
+                latitude: location?.latitude || 37.78825,
+                longitude: location?.longitude || -122.4324,
                 latitudeDelta: 0.05,
                 longitudeDelta: 0.05,
-            }}
-            showsUserLocation={true}
+              }}
+              showsUserLocation={true}
             >
-            <UrlTile urlTemplate="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" zIndex={-1} />
+              <UrlTile urlTemplate="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" zIndex={-1} />
             </MapView>
-        )}
+          )}
         </View>
-      
-      {/* Bottom Bar */}
-      <View style={styles.bottomBar}>
-        <CustomButton title="Login / Sign Up" onPress={() => {}} theme={currentTheme} />
-        <TouchableOpacity style={styles.profileButton}>
-          <Text style={[styles.profileText, { color: currentTheme.textColor }]}>Profile</Text>
+
+        {/* Footer */}
+        <View style={styles.footer}>
+        <TouchableOpacity style={[styles.vibrantButton]} onPress={onGoToSignIn}>
+            <Text style={styles.vibrantButtonText}>Login</Text>
         </TouchableOpacity>
-      </View>
-    </View>
+          <TouchableOpacity style={[styles.vibrantButton]}>
+            <Text style={styles.vibrantButtonText}>Sign Up</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton}>
+            <Text style={[styles.iconText, { color: currentTheme.textColor, fontSize: 28 }]}>{'👤'}</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  // Main container.
-  container: {
+  linearGradient: {
     flex: 1,
   },
-  // Header styles.
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
+  headerBranding: {
+    paddingHorizontal: 16,
+    paddingTop: 40,
+    paddingBottom: 20,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 12,
-    marginTop: 40,
-  },
-  headerLeft: {
-    flexDirection: 'row',
   },
   iconButton: {
-    marginRight: 10,
+    marginRight: 16,
   },
   iconText: {
-    fontSize: 14,
+    fontSize: 26,
   },
-  businessButton: {
-    padding: 8,
+  // New vibrant button style:
+  vibrantButton: {
+    backgroundColor: '#613be9', // Default (will be overridden by currentTheme.accentColor via inline style if needed)
     borderWidth: 1,
-    borderRadius: 5,
-  },
-  businessText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  // Branding styles.
-  branding: {
-    alignItems: 'center',
-    marginVertical: 20,
+    borderColor: '#ffffff', // Thin white border
+    borderRadius: 8,
+    paddingVertical: 12,
     paddingHorizontal: 20,
-  },
-  logoPlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
+    marginVertical: 5,
   },
-  logoText: {
-    fontSize: 12,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  mission: {
-    fontSize: 14,
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  toggleButton: {
-    marginTop: 10,
-    padding: 8,
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  toggleButtonText: {
-    fontSize: 14,
-  },
-  // Map section styles.
-  mapContainer: {
-    flex: 1,
-    justifyContent: 'center', // Center map vertically
-    alignItems: 'center', // Center map horizontally
-  },
-  map: {
-    width: '90%', // Smaller than full width
-    height: 300, // Adjust the height
-    borderRadius: 10, // Rounded edges
-    borderWidth: 2, // Border thickness
-    overflow: 'hidden', // Ensures border-radius applies
-  },
-  // Bottom bar styles.
-  bottomBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 12,
-    marginBottom: 20,
-  },
-  profileButton: {
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  profileText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  // Base input and button styles.
-  input: {
-    height: 40,
-    width: '80%',
-    margin: 12,
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-  },
-  button: {
-    padding: 10,
-    margin: 12,
-    borderWidth: 1,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
+  vibrantButtonText: {
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  brandingSection: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  logoCircle: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  mainTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  missionText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginHorizontal: 16,
+    marginBottom: 12,
+  },
+  mapContainer: {
+    marginVertical: 20,
+    height: 300,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  map: {
+    width: '90%',
+    height: '100%',
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 16,
+    paddingBottom: 20,
   },
 });
