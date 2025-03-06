@@ -26,7 +26,7 @@ const databases = new Databases(client);
 const DATABASE_ID = '67a602c6002a8a86591c';
 const THEME_COLLECTION_ID = '67a6031a00251ca0d9e3';
 
-export default function HomePage({ onGoToSignIn,onGoToSignUp}) {
+export default function HomePage({ onGoToSignIn,onGoToSignUp,onGoToProfile}) {
   const [deviceId, setDeviceId] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [location, setLocation] = useState(null);
@@ -157,8 +157,8 @@ export default function HomePage({ onGoToSignIn,onGoToSignUp}) {
             <TouchableOpacity style={styles.iconButton}>
               <Text style={[styles.iconText, { color: currentTheme.textColor }]}>{'🌐'}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.vibrantButton]}>
-              <Text style={styles.vibrantButtonText}>Business Owner? Join</Text>
+            <TouchableOpacity style={styles.backButton}>
+                <Text style={[styles.backButtonText, { color: currentTheme.textColor }]}>{'Business Owner? Join'}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.brandingSection}>
@@ -203,7 +203,7 @@ export default function HomePage({ onGoToSignIn,onGoToSignUp}) {
           <TouchableOpacity style={[styles.vibrantButton]} onPress={onGoToSignUp}>
             <Text style={styles.vibrantButtonText}>Sign Up</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={onGoToProfile}>
             <Text style={[styles.iconText, { color: currentTheme.textColor, fontSize: 28 }]}>{'👤'}</Text>
           </TouchableOpacity>
         </View>

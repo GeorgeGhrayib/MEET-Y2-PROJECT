@@ -1,13 +1,14 @@
-// App.js
+// App.jsx
 import React, { useState } from 'react';
 import Index from './app/index.jsx';
 import HomePage from './app/HomePage.jsx';
 import SignInPage from './app/SignIn.jsx';
 import SignUpPage from './app/SignUp.jsx';
-import Layout from './app/layout 2.jsx';
+import ProfilePage from './app/Profile.jsx';
+import Layout from './app/layout.jsx';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('index'); // 'index', 'home', 'signin', or 'signup'
+  const [currentScreen, setCurrentScreen] = useState('index'); // 'index', 'home', 'signin', 'signup', 'profile'
 
   return (
     <Layout>
@@ -22,6 +23,7 @@ export default function App() {
         <HomePage 
           onGoToSignIn={() => setCurrentScreen('signin')}
           onGoToSignUp={() => setCurrentScreen('signup')}
+          onGoToProfile={() => setCurrentScreen('profile')}
         />
       )}
       {currentScreen === 'signin' && (
@@ -35,6 +37,9 @@ export default function App() {
           onGoToHome={() => setCurrentScreen('home')}
           onGoToSignIn={() => setCurrentScreen('signin')}
         />
+      )}
+      {currentScreen === 'profile' && (
+        <ProfilePage onGoToHome={() => setCurrentScreen('home')} />
       )}
     </Layout>
   );
