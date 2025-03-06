@@ -1,3 +1,4 @@
+// HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -9,6 +10,8 @@ import {
   PermissionsAndroid,
   Platform,
   ScrollView,
+  TextInput,
+  Image,
 } from 'react-native';
 import { Client, Databases } from 'appwrite';
 import DeviceInfo from 'react-native-device-info';
@@ -26,25 +29,26 @@ const databases = new Databases(client);
 const DATABASE_ID = '67a602c6002a8a86591c';
 const THEME_COLLECTION_ID = '67a6031a00251ca0d9e3';
 
-export default function HomePage({ onGoToSignIn,onGoToSignUp,onGoToProfile}) {
+export default function HomePage({ onGoToSignIn, onGoToSignUp, onGoToProfile }) {
   const [deviceId, setDeviceId] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Theme definitions with gradient colors and a vibrant accent color (purple).
+  // Theme definitions with gradient colors and vibrant accent (purple).
   const lightTheme = {
     gradientColors: ['#b3e5fc', '#0288d1'], // Light blue gradient (top to bottom)
     textColor: '#000000',
     placeholderColor: '#888888',
-    accentColor: '#613be9', // Vibrant purple for light mode
+    accentColor: '#613be9', // Vibrant purple for buttons
   };
 
   const darkTheme = {
     gradientColors: ['#0d47a1', '#01579b'], // Dark blue gradient (top to bottom)
     textColor: '#ffffff',
     placeholderColor: '#aaaaaa',
-    accentColor: '#613be9', // Vibrant purple for dark mode
+    accentColor: '#613be9', // Vibrant purple for buttons
   };
 
   const currentTheme = isDarkMode ? darkTheme : lightTheme;
@@ -158,18 +162,22 @@ export default function HomePage({ onGoToSignIn,onGoToSignUp,onGoToProfile}) {
               <Text style={[styles.iconText, { color: currentTheme.textColor }]}>{'🌐'}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.backButton}>
-                <Text style={[styles.backButtonText, { color: currentTheme.textColor }]}>{'Business Owner? Join'}</Text>
+              <Text style={[styles.backButtonText, { color: currentTheme.textColor }]}>{'Business Owner? Join'}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.brandingSection}>
             <View style={[styles.logoCircle, { backgroundColor: currentTheme.accentColor }]}>
-              <Text style={{ color: '#ffffff', fontSize: 20 }}>Logo</Text>
+            <Image 
+                source={require('../assets/OpenWay.png')}
+                style={styles.logoImage}
+                resizeMode="contain"
+            />
             </View>
             <Text style={[styles.mainTitle, { color: currentTheme.textColor }]}>Welcome to OpenWay!</Text>
             <Text style={[styles.missionText, { color: currentTheme.textColor }]}>
               Our mission is to encourage businesses to be wheelchair-friendly and provide reliable info about accessible locations.
             </Text>
-            <TouchableOpacity style={[styles.vibrantButton]} onPress={toggleTheme}>
+            <TouchableOpacity style={styles.vibrantButton} onPress={toggleTheme}>
               <Text style={styles.vibrantButtonText}>Toggle Theme</Text>
             </TouchableOpacity>
           </View>
@@ -195,12 +203,23 @@ export default function HomePage({ onGoToSignIn,onGoToSignUp,onGoToProfile}) {
           )}
         </View>
 
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={[styles.searchInput, { color: currentTheme.textColor }]}
+            placeholder="Search for a location..."
+            placeholderTextColor={currentTheme.placeholderColor}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+
         {/* Footer */}
         <View style={styles.footer}>
-        <TouchableOpacity style={[styles.vibrantButton]} onPress={onGoToSignIn}>
+          <TouchableOpacity style={styles.vibrantButton} onPress={onGoToSignIn}>
             <Text style={styles.vibrantButtonText}>Login</Text>
-        </TouchableOpacity>
-          <TouchableOpacity style={[styles.vibrantButton]} onPress={onGoToSignUp}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.vibrantButton} onPress={onGoToSignUp}>
             <Text style={styles.vibrantButtonText}>Sign Up</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton} onPress={onGoToProfile}>
@@ -236,22 +255,11 @@ const styles = StyleSheet.create({
   iconText: {
     fontSize: 26,
   },
-  // New vibrant button style:
-  vibrantButton: {
-    backgroundColor: '#613be9', // Default (will be overridden by currentTheme.accentColor via inline style if needed)
-    borderWidth: 1,
-    borderColor: '#ffffff', // Thin white border
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 5,
+  backButton: {
+    padding: 8,
   },
-  vibrantButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  backButtonText: {
+    fontSize: 18,
   },
   brandingSection: {
     alignItems: 'center',
@@ -276,12 +284,27 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 12,
   },
+  vibrantButton: {
+    backgroundColor: '#613be9',
+    borderWidth: 1,
+    borderColor: '#ffffff',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+  },
+  vibrantButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   mapContainer: {
     marginVertical: 20,
     height: 300,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
   },
   map: {
     width: '90%',
@@ -289,10 +312,28 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
   },
+  searchContainer: {
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 20,
+  },
+  searchInput: {
+    width: '90%',
+    height: 40,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    backgroundColor: '#ffffff',
+  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingHorizontal: 16,
     paddingBottom: 20,
+  },
+  logoImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 45,
   },
 });

@@ -58,7 +58,7 @@ function CustomTextInput({ placeholder, value, onChangeText, keyboardType, theme
   );
 }
 
-export default function Index({ onGoToHome }) {
+export default function Index({ onGoToHome, onGoToReview }) {
   const [deviceId, setDeviceId] = useState('');
   
   // Fetch a unique device ID at the start of the component’s lifecycle.
@@ -323,6 +323,12 @@ export default function Index({ onGoToHome }) {
       <CustomButton
         title="HomePage"
         onPress={onGoToHome}
+        theme={currentTheme}
+      />
+
+      <CustomButton
+        title="HomePage"
+        onPress={onGoToReview}
         theme={currentTheme}
       />
 

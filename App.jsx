@@ -5,10 +5,11 @@ import HomePage from './app/HomePage.jsx';
 import SignInPage from './app/SignIn.jsx';
 import SignUpPage from './app/SignUp.jsx';
 import ProfilePage from './app/Profile.jsx';
+import ReviewPage from './app/Review.jsx';
 import Layout from './app/layout.jsx';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('index'); // 'index', 'home', 'signin', 'signup', 'profile'
+  const [currentScreen, setCurrentScreen] = useState('index'); // 'index', 'home', 'signin', 'signup', 'profile', 'review'
 
   return (
     <Layout>
@@ -17,6 +18,7 @@ export default function App() {
           onGoToHome={() => setCurrentScreen('home')}
           onGoToSignIn={() => setCurrentScreen('signin')}
           onGoToSignUp={() => setCurrentScreen('signup')}
+          onGoToReview={() => setCurrentScreen('review')}
         />
       )}
       {currentScreen === 'home' && (
@@ -24,22 +26,34 @@ export default function App() {
           onGoToSignIn={() => setCurrentScreen('signin')}
           onGoToSignUp={() => setCurrentScreen('signup')}
           onGoToProfile={() => setCurrentScreen('profile')}
+          onGoToReview={() => setCurrentScreen('review')}
         />
       )}
       {currentScreen === 'signin' && (
         <SignInPage 
           onGoToHome={() => setCurrentScreen('home')}
           onGoToSignUp={() => setCurrentScreen('signup')}
+          onGoToReview={() => setCurrentScreen('review')}
         />
       )}
       {currentScreen === 'signup' && (
         <SignUpPage 
           onGoToHome={() => setCurrentScreen('home')}
           onGoToSignIn={() => setCurrentScreen('signin')}
+          onGoToReview={() => setCurrentScreen('review')}
         />
       )}
       {currentScreen === 'profile' && (
-        <ProfilePage onGoToHome={() => setCurrentScreen('home')} />
+        <ProfilePage 
+          onGoToHome={() => setCurrentScreen('home')}
+          onGoToReview={() => setCurrentScreen('review')}
+        />
+      )}
+      {currentScreen === 'review' && (
+        <ReviewPage 
+          onGoToHome={() => setCurrentScreen('home')}
+          onGoToBack={() => setCurrentScreen('index')}
+        />
       )}
     </Layout>
   );
