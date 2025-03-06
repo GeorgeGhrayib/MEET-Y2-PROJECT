@@ -26,7 +26,7 @@ const databases = new Databases(client);
 const DATABASE_ID = '67a602c6002a8a86591c';
 const THEME_COLLECTION_ID = '67a6031a00251ca0d9e3';
 
-export default function HomePage({ onGoToSignIn }) {
+export default function HomePage({ onGoToSignIn,onGoToSignUp}) {
   const [deviceId, setDeviceId] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [location, setLocation] = useState(null);
@@ -200,7 +200,7 @@ export default function HomePage({ onGoToSignIn }) {
         <TouchableOpacity style={[styles.vibrantButton]} onPress={onGoToSignIn}>
             <Text style={styles.vibrantButtonText}>Login</Text>
         </TouchableOpacity>
-          <TouchableOpacity style={[styles.vibrantButton]}>
+          <TouchableOpacity style={[styles.vibrantButton]} onPress={onGoToSignUp}>
             <Text style={styles.vibrantButtonText}>Sign Up</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
