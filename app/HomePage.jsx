@@ -153,6 +153,7 @@ export default function HomePage({ onGoToSignIn, onGoToSignUp, onGoToProfile }) 
     <LinearGradient colors={currentTheme.gradientColors} style={styles.linearGradient}>
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         {/* Header & Branding */}
+        <Text></Text>
         <View style={styles.headerBranding}>
           <View style={styles.header}>
             <TouchableOpacity style={styles.iconButton}>

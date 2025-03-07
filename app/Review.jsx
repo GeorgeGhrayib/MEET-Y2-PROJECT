@@ -146,6 +146,7 @@ export default function ReviewPage({ onGoToHome }) {
     <LinearGradient colors={currentTheme.gradientColors} style={styles.linearGradient}>
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         {/* Header */}
+        <Text></Text>
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={onGoToHome}>
             <Text style={[styles.backButtonText, { color: currentTheme.textColor }]}>{'← Home'}</Text>

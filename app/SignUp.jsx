@@ -151,6 +151,7 @@ export default function SignUpPage({ onGoToHome, onGoToSignIn }) {
     <LinearGradient colors={currentTheme.gradientColors} style={styles.linearGradient}>
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         {/* Back Button */}
+        <Text></Text>
         <TouchableOpacity style={styles.backButton} onPress={onGoToHome}>
           <Text style={[styles.backButtonText, { color: currentTheme.textColor }]}>{'← Home'}</Text>
         </TouchableOpacity>

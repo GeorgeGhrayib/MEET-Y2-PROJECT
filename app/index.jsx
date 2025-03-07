@@ -253,6 +253,7 @@ export default function Index({ onGoToHome, onGoToReview }) {
   // Main UI rendering.
   return (
     <View style={[styles.container, { backgroundColor: currentTheme.backgroundColor }]}>
+      <Text></Text>
       <Text style={[styles.text, { color: currentTheme.textColor }]}>
         Appwrite integration example.
       </Text>

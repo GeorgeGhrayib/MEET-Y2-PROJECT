@@ -98,6 +98,7 @@ export default function ProfilePage({ onGoToHome }) {
     <LinearGradient colors={currentTheme.gradientColors} style={styles.linearGradient}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.contentWrapper}>
+            <Text></Text>
           {/* Header */}
           <View style={styles.header}>
             {/* Back Button */}
