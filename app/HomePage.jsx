@@ -167,7 +167,7 @@ export default function HomePage({ onGoToSignIn, onGoToSignUp, onGoToProfile }) 
             </TouchableOpacity>
           </View>
           <View style={styles.brandingSection}>
-            <View style={[styles.logoCircle, { backgroundColor: currentTheme.accentColor }]}>
+            <View style={[styles.logoCircle, { backgroundColor: "#FFFFFF" }]}>
             <Image 
                 source={require('../assets/OpenWay.png')}
                 style={styles.logoImage}
@@ -207,7 +207,7 @@ export default function HomePage({ onGoToSignIn, onGoToSignUp, onGoToProfile }) 
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <TextInput
-            style={[styles.searchInput, { color: currentTheme.textColor }]}
+            style={[styles.searchInput]}
             placeholder="Search for a location..."
             placeholderTextColor={currentTheme.placeholderColor}
             value={searchQuery}
@@ -267,12 +267,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   logoCircle: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 100,
+    height: 100,
+    borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 5,
   },
   mainTitle: {
     fontSize: 26,
