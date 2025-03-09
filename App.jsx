@@ -9,7 +9,7 @@ import ReviewPage from './app/Review.jsx';
 import Layout from './app/layout.jsx';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('home'); // 'index', 'home', 'signin', 'signup', 'profile', 'review'
+  const [currentScreen, setCurrentScreen] = useState('index'); // 'index', 'home', 'signin', 'signup', 'profile', 'review'
 
   return (
     <Layout>

@@ -164,7 +164,7 @@ export default function ReviewPage({ onGoToHome }) {
             <Text style={styles.searchIcon}>🔍</Text>
             <TextInput 
               style={styles.searchInput}
-              placeholder="Search for a business..."
+              placeholder="Search for a location/business..."
               placeholderTextColor="#888"
               value={searchText}
               onChangeText={setSearchText}

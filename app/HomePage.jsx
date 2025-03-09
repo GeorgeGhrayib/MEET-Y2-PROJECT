@@ -208,7 +208,7 @@ export default function HomePage({ onGoToSignIn, onGoToSignUp, onGoToProfile }) 
         <View style={styles.searchContainer}>
           <TextInput
             style={[styles.searchInput]}
-            placeholder="Search for a location..."
+            placeholder="Search for a location/business..."
             placeholderTextColor={currentTheme.placeholderColor}
             value={searchQuery}
             onChangeText={setSearchQuery}

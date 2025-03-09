@@ -328,7 +328,7 @@ export default function Index({ onGoToHome, onGoToReview }) {
       />
 
       <CustomButton
-        title="HomePage"
+        title="ReviewPage"
         onPress={onGoToReview}
         theme={currentTheme}
       />
