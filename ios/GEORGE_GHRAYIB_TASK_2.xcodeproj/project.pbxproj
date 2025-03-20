@@ -10,8 +10,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5D06746D257682D75862C39C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
+		7CDE1CDDD88B59D6EEBCF9B5 /* libPods-GEORGE_GHRAYIB_TASK_2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 377BA78F4DD2DF817D4D2BEA /* libPods-GEORGE_GHRAYIB_TASK_2.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		9C5E9741D5FBA523566704A9 /* libPods-GEORGE_GHRAYIB_TASK_2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2943B30A24904346B5623C /* libPods-GEORGE_GHRAYIB_TASK_2.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,11 +19,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = GEORGE_GHRAYIB_TASK_2/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = GEORGE_GHRAYIB_TASK_2/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = GEORGE_GHRAYIB_TASK_2/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		5537D334400EF0E389F35C05 /* Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig"; path = "Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig"; sourceTree = "<group>"; };
+		172AB002BB7CB47AFD7DABC3 /* Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig"; path = "Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig"; sourceTree = "<group>"; };
+		377BA78F4DD2DF817D4D2BEA /* libPods-GEORGE_GHRAYIB_TASK_2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GEORGE_GHRAYIB_TASK_2.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = GEORGE_GHRAYIB_TASK_2/AppDelegate.swift; sourceTree = "<group>"; };
-		7C2943B30A24904346B5623C /* libPods-GEORGE_GHRAYIB_TASK_2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GEORGE_GHRAYIB_TASK_2.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = GEORGE_GHRAYIB_TASK_2/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		D155F2F4E974288EC11060A9 /* Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig"; path = "Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig"; sourceTree = "<group>"; };
+		9A2B81E8733B5F5CA161B7F1 /* Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig"; path = "Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C5E9741D5FBA523566704A9 /* libPods-GEORGE_GHRAYIB_TASK_2.a in Frameworks */,
+				7CDE1CDDD88B59D6EEBCF9B5 /* libPods-GEORGE_GHRAYIB_TASK_2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				7C2943B30A24904346B5623C /* libPods-GEORGE_GHRAYIB_TASK_2.a */,
+				377BA78F4DD2DF817D4D2BEA /* libPods-GEORGE_GHRAYIB_TASK_2.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -92,8 +92,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				5537D334400EF0E389F35C05 /* Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig */,
-				D155F2F4E974288EC11060A9 /* Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig */,
+				172AB002BB7CB47AFD7DABC3 /* Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig */,
+				9A2B81E8733B5F5CA161B7F1 /* Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -105,13 +105,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "GEORGE_GHRAYIB_TASK_2" */;
 			buildPhases = (
-				288BDBEFB8DB6D2F48F54948 /* [CP] Check Pods Manifest.lock */,
+				AB2CEDDB73A99CF52A69A3BF /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				EAA19CB4F53B86574D1E4E2B /* [CP] Embed Pods Frameworks */,
-				8B96B9FDCC8C7AB210EA7CD7 /* [CP] Copy Pods Resources */,
+				D0B2D11DE79CF36280D46D47 /* [CP] Embed Pods Frameworks */,
+				514A794E154F20BDED3A3AA3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -183,7 +183,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		288BDBEFB8DB6D2F48F54948 /* [CP] Check Pods Manifest.lock */ = {
+		514A794E154F20BDED3A3AA3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AB2CEDDB73A99CF52A69A3BF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -205,24 +222,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8B96B9FDCC8C7AB210EA7CD7 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GEORGE_GHRAYIB_TASK_2/Pods-GEORGE_GHRAYIB_TASK_2-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EAA19CB4F53B86574D1E4E2B /* [CP] Embed Pods Frameworks */ = {
+		D0B2D11DE79CF36280D46D47 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -255,7 +255,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5537D334400EF0E389F35C05 /* Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig */;
+			baseConfigurationReference = 172AB002BB7CB47AFD7DABC3 /* Pods-GEORGE_GHRAYIB_TASK_2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -283,7 +283,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D155F2F4E974288EC11060A9 /* Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig */;
+			baseConfigurationReference = 9A2B81E8733B5F5CA161B7F1 /* Pods-GEORGE_GHRAYIB_TASK_2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

@@ -335,6 +335,6 @@ const styles = StyleSheet.create({
   logoImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 45,
+    borderRadius: 100,
   },
 });
